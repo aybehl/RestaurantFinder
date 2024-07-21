@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <title><%= title %></title>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+      <h1 class="text-4xl font-bold mb-4">Find Restaurants Near You</h1>
+      <form id="searchForm" class="bg-white p-6 rounded shadow-md">
+        <div class="mb-4">
+          <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine:</label>
+          <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
+        </div>
+        <div class="mb-4">
+          <label for="location" class="block text-gray-700 font-bold mb-2">Enter a Location:</label>
+          <input type="text" id="location" name="location" class="border p-2 w-full" placeholder="e.g., Toronto, Yonge Street">
+        </div>
+        <div class="mb-4">
+          <button type="button" id="useLocation" class="bg-blue-500 text-white px-4 py-2 rounded">Use My Live Location</button>
+        </div>
+        <div>
+          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Search</button>
+        </div>
+      </form>
+    </div>
+  
+    <script>
+      document.getElementById('useLocation').addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            const cuisine = document.getElementById('cuisine').value;
+            window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}`;
+          });
+        } else {
+          alert('Geolocation is not supported by this browser.');
+        }
+      });
+  
+      document.getElementById('searchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const cuisine = document.getElementById('cuisine').value;
+        const location = document.getElementById('location').value;
+        window.location.href = `/search?location=${location}&cuisine=${cuisine}`;
+      });
+    </script>
+  </body>
+</html>
