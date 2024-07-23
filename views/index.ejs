@@ -5,48 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/tailwind-built.css" rel="stylesheet">
     <title><%= title %></title>
-</head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-      <h1 class="text-4xl font-bold mb-4">Find Restaurants Near You</h1>
-      <form id="searchForm" class="bg-white p-6 rounded shadow-md">
-        <div class="mb-4">
-          <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine:</label>
-          <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
-        </div>
-        <div class="mb-4">
-          <label for="location" class="block text-gray-700 font-bold mb-2">Enter a Location:</label>
-          <input type="text" id="location" name="location" class="border p-2 w-full" placeholder="e.g., Toronto, Yonge Street">
-        </div>
-        <div class="mb-4">
-          <button type="button" id="useLocation" class="bg-blue-500 text-white px-4 py-2 rounded">Use My Live Location</button>
-        </div>
-        <div>
-          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Search</button>
-        </div>
-      </form>
-    </div>
-  
-    <script>
-      document.getElementById('useLocation').addEventListener('click', async (e) => {
-        e.preventDefault();
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(async (position) => {
-            const { latitude, longitude } = position.coords;
-            const cuisine = document.getElementById('cuisine').value;
-            window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}`;
-          });
-        } else {
-          alert('Geolocation is not supported by this browser.');
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
         }
-      });
-  
-      document.getElementById('searchForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const cuisine = document.getElementById('cuisine').value;
-        const location = document.getElementById('location').value;
-        window.location.href = `/search?location=${location}&cuisine=${cuisine}`;
-      });
+        .bg-cover {
+            background-image: url('/images/food_doodle.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+        }
+        .bg-overlay {
+            background-color: rgba(0, 0, 0, 0); /* Adjust the overlay color and transparency */
+            height: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10rem;
+            background: rgba(247, 150, 79, 1);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo img {
+            height: 50px;
+            margin-right: 1rem;
+        }
+        .header nav a {
+            margin-left: 1rem;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .container {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .container h1 {
+          color: #000038;
+          border-radius: 0.5rem;
+          background-color: #42C3EB;
+          padding: 0.5rem 0;
+        }
+        .form-wrapper {
+            background: rgba(255, 255, 255, 1);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-cover">
+        <div class="bg-overlay">
+            <header class="header">
+                <div class="logo">
+                    <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
+                    <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+                </div>
+                <nav>
+                    <a href="/">Home</a>
+                    <a href="/search">Search</a>
+                </nav>
+            </header>
+            <div class="container">
+                <h1 class="text-5xl font-bold mb-6 text-center text-black">Explore Restaurants</h1>
+                <div class="form-wrapper">
+                    <form id="searchForm">
+                        <div class="mb-4">
+                            <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine</label>
+                            <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="block text-gray-700 font-bold mb-2">Location</span>
+                            <div class="flex items-center justify-evenly gap-x-8">
+                                <button type="button" id="useLocation" class="bg-cyan-400 text-white px-4 py-2 rounded mb-2">Use My Live Location</button>
+                                <span class="text-gray-500 mb-2">OR</span>
+                                <input type="text" id="location" name="location" class="border p-2 w-1/2" placeholder="e.g., Toronto, Yonge Street">
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded w-full">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('useLocation').addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const cuisine = document.getElementById('cuisine').value;
+                    const preferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked')).map(el => el.value);
+                    window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}&preferences=${preferences.join(',')}`;
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cuisine = document.getElementById('cuisine').value;
+            const location = document.getElementById('location').value;
+            const preferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked')).map(el => el.value);
+            window.location.href = `/search?location=${location}&cuisine=${cuisine}&preferences=${preferences.join(',')}`;
+        });
     </script>
-  </body>
+</body>
 </html>
+
+
+//http://localhost:8096/search?location=Toronto&cuisine=Italian,fries&preferences=dancing,open_now,outdoor_seating,happy_hour,pet_friendly
