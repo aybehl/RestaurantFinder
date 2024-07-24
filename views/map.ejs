@@ -1,57 +1,290 @@
-<!doctype html>
-<!--
- @license
- Copyright 2019 Google LLC. All Rights Reserved.
- SPDX-License-Identifier: Apache-2.0
--->
- <style>
-    #map {
-    height: 400px; /* The height is 400 pixels */
-    width: 100%; /* The width is the width of the web page */
-}
- </style>
-<html>
-  <head>
-    <title>Add Map</title>
-  </head>
-  <body>
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
-    <div id="map"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind-built.css" rel="stylesheet">
+    <title>Restaurants</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .bg-cover {
+            background-image: url('/images/food_doodle.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10rem;
+            background: rgba(247, 150, 79, 1);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo img {
+            height: 50px;
+            margin-right: 1rem;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a {
+            margin-left: 1rem;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .menu-button svg {
+            height: 24px;
+            width: 24px;
+        }
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 3.5rem;
+            left: 0;
+            right: 0;
+            background: rgba(247, 150, 79, 1);
+            text-align: center;
+            z-index: 10;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+        .mobile-menu a {
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .menu-button {
+                display: block;
+            }
+        }
+        .content {
+            display: flex;
+            height: calc(100% - 4.5rem);
+            padding: 0.5rem 10rem;
+        }
 
-    <!-- prettier-ignore -->
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyB-ucSqE_shmaLMZYSyyJbPfBKyka3xTvU", v: "weekly"});</script>
-        
+        .content h2 {
+          font-weight: 700;
+          font-size: 1.2rem;
+        }
+        .sidebar {
+            width: 30%;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin: 1rem 0;
+            color: #333;
+        }
+        .restaurant-card {
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .map {
+            width: 70%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-cover">
+        <header class="header">
+            <div class="logo">
+                <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
+                <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/search">Search</a>
+            </nav>
+            <button class="menu-button" id="menuButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </header>
+        <nav class="mobile-menu" id="mobileMenu">
+            <a href="/">Home</a>
+            <a href="/search">Search</a>
+        </nav>
+    
+        <div class="content">
+            <div class="sidebar">
+                <h2>Restaurants</h2>
+                <% businesses.forEach(business => { %>
+                    <div class="restaurant-card">
+                        <h3 class="text-xl font-bold"><%= business.name %></h3>
+                        <p><%= business.categories.map(obj => obj.title).join(', ') %></p>
+                        <p><%= business.location.display_address.join(', ') %></p>
+                        <p><%= business.rating %> | Price: <%= business.price %></p>
+                        <p><a href="<%= business.attributes.menu_url %>" target="_blank" class="text-blue-500">View Menu</a></p>
+                        <p><a href="<%= business.url %>" target="_blank" class="text-blue-500">More Info</a></p>
+                    </div>
+                <% }) %>
+            </div>
+            <div id="map" class="map"></div>
+        </div>
+    </div>
+
     <script>
+        document.getElementById('menuButton').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        });
 
-      // Initialize and add the map
-let map;
+        window.addEventListener('resize', () => {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (window.innerWidth > 768) {
+                mobileMenu.classList.remove('show');
+            }
+        });
 
-async function initMap() {
-  // The location of Uluru
-  const position = { lat: -25.344, lng: 131.031 };
-  // Request needed libraries.
-  //@ts-ignore
-  const { Map } = await google.maps.importLibrary("maps");
-  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        function decodeHTMLEntities(text) {
+            var textArea = document.createElement('textarea');
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
 
-  // The map, centered at Uluru
-  map = new Map(document.getElementById("map"), {
-    zoom: 4,
-    center: position,
-    mapId: "DEMO_MAP_ID",
-  });
+        async function initMap() {
+          const userLocation = {
+                latitude: parseFloat("<%= userLocation.latitude %>"),
+                longitude: parseFloat("<%= userLocation.longitude %>")
+            };
+            console.log(userLocation);
 
-  // The marker, positioned at Uluru
-  const marker = new AdvancedMarkerElement({
-    map: map,
-    position: position,
-    title: "Uluru",
-  });
-}
+            const businessesString = decodeHTMLEntities("<%= businessesString %>");
+            let businesses = [];
 
-  initMap();
+            if (businessesString) {
+                console.log('ghelow');
+                try {
+                    businesses = JSON.parse(businessesString);
+                } catch (e) {
+                    console.error('Error parsing businesses JSON', e);
+                }
+            }
+
+            //console.log(businesses);
+
+            // if (!isFinite(userLocation.latitude) || !isFinite(userLocation.longitude)) {
+            //     console.error('Invalid user location coordinates');
+            //     userLocation.latitude = 0;
+            //     userLocation.longitude = 0;
+            // }
+
+            // const { Map } = await google.maps.importLibrary("maps");
+
+            // const map = new Map(document.getElementById('map'), {
+            //     center: { lat: userLocation.latitude, lng: userLocation.longitude },
+            //     zoom: 14,
+            //     mapId: "<%= mapId %>"
+            // });
+
+            let mapCenter = userLocation;
+            if (!isFinite(userLocation.latitude) || !isFinite(userLocation.longitude)) {
+                if (businesses.length > 0) {
+                    const avgLat = businesses.reduce((acc, curr) => acc + curr.coordinates.latitude, 0) / businesses.length;
+                    const avgLng = businesses.reduce((acc, curr) => acc + curr.coordinates.longitude, 0) / businesses.length;
+                    mapCenter = { latitude: avgLat, longitude: avgLng };
+                } else {
+                    console.error('No valid coordinates for user or businesses');
+                    mapCenter = { latitude: 0, longitude: 0 };
+                }
+            }
+
+            const { Map } = await google.maps.importLibrary("maps");
+
+            const map = new Map(document.getElementById('map'), {
+                center: { lat: mapCenter.latitude, lng: mapCenter.longitude },
+                zoom: 14,
+                mapId: "<%= mapId %>"
+            });
+
+            const {AdvancedMarkerElement} = await google.maps.importLibrary("marker");
+
+            businesses.forEach(business => {
+              if (isFinite(business.coordinates.latitude) && isFinite(business.coordinates.longitude)) {
+                console.log('Adding marker for business:', business.name, business.coordinates);
+                    // new AdvancedMarkerElement({
+                    //     position: { lat: business.coordinates.latitude, lng: business.coordinates.longitude },
+                    //     map: map,
+                    //     title: business.name
+                    // });
+
+                    // Use traditional marker for debugging
+                    new google.maps.Marker({
+                        position: { lat: business.coordinates.latitude, lng: business.coordinates.longitude },
+                        map: map,
+                        title: business.name
+                    });
+                } else {
+                    console.error('Invalid business coordinates for', business.name);
+                }
+            });
+
+            if (isFinite(userLocation.latitude) && isFinite(userLocation.longitude)) {
+              new google.maps.Marker({
+                    position: { lat: userLocation.latitude, lng: userLocation.longitude },
+                    map: map,
+                    title: 'Your Location',
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 8,
+                        fillColor: 'blue',
+                        fillOpacity: 0.8,
+                        strokeWeight: 2
+                    }
+                });
+                // new AdvancedMarkerElement({
+                //     position: { lat: userLocation.latitude, lng: userLocation.longitude },
+                //     map: map,
+                //     title: 'Your Location',
+                //     icon: {
+                //         path: google.maps.SymbolPath.CIRCLE,
+                //         scale: 8,
+                //         fillColor: 'blue',
+                //         fillOpacity: 0.8,
+                //         strokeWeight: 2
+                //     }
+                // });
+            }
+        }
+
+        // Load the Google Maps API script and call the initMap function
+        (function() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&v=beta&callback=initMap`;
+            //script.src = `https://maps.googleapis.com/maps/api/js?key=${"<%= googleMapsApiKey %>"}&v=beta&callback=initMap`;
+            script.async = true;
+            document.head.appendChild(script);
+        })();
     </script>
-  </body>
+</body>
 </html>

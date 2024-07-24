@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
       return res.redirect('/');
     }
     
-    try {
+    try { 
       const yelpResponse = await axios.get('https://api.yelp.com/v3/businesses/search', {
         headers: {
           Authorization: `Bearer ${process.env.YELP_API_KEY}`
@@ -36,7 +36,14 @@ router.get('/', async (req, res) => {
   
       const businesses = yelpResponse.data.businesses;
       //console.log(businesses);
-      res.render('map', { businesses, googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, userLocation: { latitude, longitude } });
+      res.render('map', { 
+        businessesString: JSON.stringify(businesses), 
+        businesses,
+        mapId: process.env.MAP_ID,
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, 
+        userLocation: { latitude, longitude }, 
+        searchQuery: "Ayushi Behl"
+       });
     } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching data from Yelp API');

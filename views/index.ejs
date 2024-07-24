@@ -17,10 +17,6 @@
             background-position: center;
             height: 100%;
         }
-        .bg-overlay {
-            background-color: rgba(0, 0, 0, 0); /* Adjust the overlay color and transparency */
-            height: 100%;
-        }
         .header {
             display: flex;
             justify-content: space-between;
@@ -36,23 +32,67 @@
             height: 50px;
             margin-right: 1rem;
         }
-        .header nav a {
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a {
             margin-left: 1rem;
             color: #333;
             text-decoration: none;
             font-weight: bold;
+        }
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .menu-button svg {
+            height: 24px;
+            width: 24px;
+        }
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 3.5rem;
+            left: 0;
+            right: 0;
+            background: rgba(247, 150, 79, 1);
+            text-align: center;
+            z-index: 10;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+        .mobile-menu a {
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .menu-button {
+                display: block;
+            }
         }
         .container {
             padding: 2rem;
             max-width: 800px;
             margin: auto;
         }
-
         .container h1 {
-          color: #000038;
-          border-radius: 0.5rem;
-          background-color: #42C3EB;
-          padding: 0.5rem 0;
+            color: #000038;
+            border-radius: 0.5rem;
+            background-color: #42C3EB;
+            padding: 0.5rem 0;
         }
         .form-wrapper {
             background: rgba(255, 255, 255, 1);
@@ -64,52 +104,69 @@
 </head>
 <body>
     <div class="bg-cover">
-        <div class="bg-overlay">
-            <header class="header">
-                <div class="logo">
-                    <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
-                    <h1 class="text-2xl font-bold">SpoonExplorer</h1>
-                </div>
-                <nav>
-                    <a href="/">Home</a>
-                    <a href="/search">Search</a>
-                </nav>
-            </header>
-            <div class="container">
-                <h1 class="text-5xl font-bold mb-6 text-center text-black">Explore Restaurants</h1>
-                <div class="form-wrapper">
-                    <form id="searchForm">
-                        <div class="mb-4">
-                            <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine</label>
-                            <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
+        <header class="header">
+            <div class="logo">
+                <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
+                <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/search">Search</a>
+            </nav>
+            <button class="menu-button" id="menuButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </header>
+        <nav class="mobile-menu" id="mobileMenu">
+            <a href="/">Home</a>
+            <a href="/search">Search</a>
+        </nav>
+        <div class="container">
+            <h1 class="text-5xl font-bold mb-6 text-center text-black">Explore Restaurants</h1>
+            <div class="form-wrapper">
+                <form id="searchForm">
+                    <div class="mb-4">
+                        <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine</label>
+                        <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
+                    </div>
+                    <div class="mb-4">
+                        <span class="block text-gray-700 font-bold mb-2">Location</span>
+                        <div class="flex items-center justify-evenly gap-x-8">
+                            <button type="button" id="useLocation" class="bg-cyan-400 text-cyan-950 px-4 py-2 rounded mb-2">Use My Live Location</button>
+                            <span class="text-gray-500 mb-2">OR</span>
+                            <input type="text" id="location" name="location" class="border p-2 w-1/2" placeholder="e.g., Toronto, Yonge Street">
                         </div>
-
-                        <div class="mb-4">
-                            <span class="block text-gray-700 font-bold mb-2">Location</span>
-                            <div class="flex items-center justify-evenly gap-x-8">
-                                <button type="button" id="useLocation" class="bg-cyan-400 text-white px-4 py-2 rounded mb-2">Use My Live Location</button>
-                                <span class="text-gray-500 mb-2">OR</span>
-                                <input type="text" id="location" name="location" class="border p-2 w-1/2" placeholder="e.g., Toronto, Yonge Street">
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded w-full">Search</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded w-full">Search</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
+        document.getElementById('menuButton').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        });
+
+        window.addEventListener('resize', () => {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (window.innerWidth > 768) {
+                mobileMenu.classList.remove('show');
+            }
+        });
+
         document.getElementById('useLocation').addEventListener('click', async (e) => {
             e.preventDefault();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(async (position) => {
                     const { latitude, longitude } = position.coords;
                     const cuisine = document.getElementById('cuisine').value;
-                    const preferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked')).map(el => el.value);
-                    window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}&preferences=${preferences.join(',')}`;
+                    window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}`;
                 });
             } else {
                 alert('Geolocation is not supported by this browser.');
@@ -120,12 +177,8 @@
             e.preventDefault();
             const cuisine = document.getElementById('cuisine').value;
             const location = document.getElementById('location').value;
-            const preferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked')).map(el => el.value);
-            window.location.href = `/search?location=${location}&cuisine=${cuisine}&preferences=${preferences.join(',')}`;
+            window.location.href = `/search?location=${location}&cuisine=${cuisine}`;
         });
     </script>
 </body>
 </html>
-
-
-//http://localhost:8096/search?location=Toronto&cuisine=Italian,fries&preferences=dancing,open_now,outdoor_seating,happy_hour,pet_friendly
