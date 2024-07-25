@@ -96,7 +96,7 @@
         .sidebar {
             width: 30%;
             overflow-y: auto;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 1);
         }
         .sidebar h2 {
             text-align: center;
@@ -116,9 +116,11 @@
 <body>
     <div class="bg-cover">
         <header class="header">
-            <div class="logo">
+            <div>
+              <a class="logo" href="/">
                 <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
                 <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+              </a>
             </div>
             <nav class="nav-links">
                 <a href="/">Home</a>
@@ -183,7 +185,6 @@
             let businesses = [];
 
             if (businessesString) {
-                console.log('ghelow');
                 try {
                     businesses = JSON.parse(businessesString);
                 } catch (e) {

@@ -42,7 +42,6 @@ router.get('/', async (req, res) => {
         mapId: process.env.MAP_ID,
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY, 
         userLocation: { latitude, longitude }, 
-        searchQuery: "Ayushi Behl"
        });
     } catch (error) {
       console.error(error);

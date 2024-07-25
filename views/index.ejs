@@ -6,108 +6,110 @@
     <link href="/css/tailwind-built.css" rel="stylesheet">
     <title><%= title %></title>
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .bg-cover {
-            background-image: url('/images/food_doodle.jpg');
-            background-size: cover;
-            background-position: center;
-            height: 100%;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 10rem;
-            background: rgba(247, 150, 79, 1);
-        }
-        .header .logo {
-            display: flex;
-            align-items: center;
-        }
-        .header .logo img {
-            height: 50px;
-            margin-right: 1rem;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-        }
-        .nav-links a {
-            margin-left: 1rem;
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .menu-button {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .menu-button svg {
-            height: 24px;
-            width: 24px;
-        }
-        .mobile-menu {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 3.5rem;
-            left: 0;
-            right: 0;
-            background: rgba(247, 150, 79, 1);
-            text-align: center;
-            z-index: 10;
-        }
-        .mobile-menu.show {
-            display: flex;
-        }
-        .mobile-menu a {
-            padding: 1rem;
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        @media (max-width: 768px) {
-            .header {
-                padding: 1rem 2rem;
-            }
-            .nav-links {
-                display: none;
-            }
-            .menu-button {
-                display: block;
-            }
-        }
-        .container {
-            padding: 2rem;
-            max-width: 800px;
-            margin: auto;
-        }
-        .container h1 {
-            color: #000038;
-            border-radius: 0.5rem;
-            background-color: #42C3EB;
-            padding: 0.5rem 0;
-        }
-        .form-wrapper {
-            background: rgba(255, 255, 255, 1);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+      body, html {
+          height: 100%;
+          margin: 0;
+          font-family: Arial, Helvetica, sans-serif;
+      }
+      .bg-cover {
+          background-image: url('/images/food_doodle.jpg');
+          background-size: cover;
+          background-position: center;
+          height: 100%;
+      }
+      .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 10rem;
+          background: rgba(247, 150, 79, 1);
+      }
+      .header .logo {
+          display: flex;
+          align-items: center;
+      }
+      .header .logo img {
+          height: 50px;
+          margin-right: 1rem;
+      }
+      .nav-links {
+          display: flex;
+          align-items: center;
+      }
+      .nav-links a {
+          margin-left: 1rem;
+          color: #333;
+          text-decoration: none;
+          font-weight: bold;
+      }
+      .menu-button {
+          display: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+      }
+      .menu-button svg {
+          height: 24px;
+          width: 24px;
+      }
+      .mobile-menu {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 3.5rem;
+          left: 0;
+          right: 0;
+          background: rgba(247, 150, 79, 1);
+          text-align: center;
+          z-index: 10;
+      }
+      .mobile-menu.show {
+          display: flex;
+      }
+      .mobile-menu a {
+          padding: 1rem;
+          color: #333;
+          text-decoration: none;
+          font-weight: bold;
+      }
+      @media (max-width: 768px) {
+          .header {
+              padding: 1rem 2rem;
+          }
+          .nav-links {
+              display: none;
+          }
+          .menu-button {
+              display: block;
+          }
+      }
+      .container {
+          padding: 2rem;
+          max-width: 800px;
+          margin: auto;
+      }
+      .container h1 {
+          color: #000038;
+          border-radius: 0.5rem;
+          background-color: #42C3EB;
+          padding: 0.5rem 0;
+      }
+      .form-wrapper {
+          background: rgba(255, 255, 255, 1);
+          padding: 2rem;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+  </style>
 </head>
 <body>
     <div class="bg-cover">
         <header class="header">
-            <div class="logo">
-                <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
-                <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+            <div>
+                <a class="logo" href="/">
+                  <img src="/images/logo.svg" alt="Image of a spoon, fork and knife">
+                  <h1 class="text-2xl font-bold">SpoonExplorer</h1>
+                </a>
             </div>
             <nav class="nav-links">
                 <a href="/">Home</a>
@@ -131,14 +133,19 @@
                         <label for="cuisine" class="block text-gray-700 font-bold mb-2">Preferred Cuisine</label>
                         <input type="text" id="cuisine" name="cuisine" class="border p-2 w-full" placeholder="e.g., Italian, Chinese">
                     </div>
+                    
                     <div class="mb-4">
-                        <span class="block text-gray-700 font-bold mb-2">Location</span>
-                        <div class="flex items-center justify-evenly gap-x-8">
-                            <button type="button" id="useLocation" class="bg-cyan-400 text-cyan-950 px-4 py-2 rounded mb-2">Use My Live Location</button>
-                            <span class="text-gray-500 mb-2">OR</span>
-                            <input type="text" id="location" name="location" class="border p-2 w-1/2" placeholder="e.g., Toronto, Yonge Street">
-                        </div>
-                    </div>
+                      <span class="block text-gray-700 font-bold mb-2">Location</span>
+                      <div class="flex items-center justify-evenly gap-x-8">
+                        <label class="block text-gray-700 font-bold mb-2">
+                          <input type="checkbox" id="useLiveLocation" name="useLiveLocation" class="mr-2">
+                          Use My Live Location
+                        </label>
+                          <span class="text-gray-500 mb-2">OR</span>
+                          <input type="text" id="location" name="location" class="border p-2 w-1/2" placeholder="e.g., Toronto, Yonge Street">
+                      </div>
+                  </div>
+
                     <div>
                         <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded w-full">Search</button>
                     </div>
@@ -148,6 +155,55 @@
     </div>
 
     <script>
+        let userLocation = {};
+
+        const getUserLocation = () => {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        userLocation.latitude = position.coords.latitude;
+                        userLocation.longitude = position.coords.longitude;
+                        resolve(userLocation);
+                    }, reject);
+                } else {
+                    reject('Geolocation is not supported by this browser.');
+                }
+            });
+        };
+
+        document.getElementById('useLiveLocation').addEventListener('change', async (e) => {
+            if (e.target.checked) {
+                try {
+                    await getUserLocation();
+                } catch (error) {
+                    alert(error);
+                    e.target.checked = false;
+                }
+            } else {
+                userLocation = {};
+            }
+        });
+
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cuisine = document.getElementById('cuisine').value;
+            const location = document.getElementById('location').value;
+
+            if (document.getElementById('useLiveLocation').checked) {
+                try {
+                    await getUserLocation();
+                    if (userLocation.latitude && userLocation.longitude) {
+                        window.location.href = `/search?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}&cuisine=${cuisine}`;
+                        return;
+                    }
+                } catch (error) {
+                    alert(error);
+                }
+            }
+
+            window.location.href = `/search?location=${location}&cuisine=${cuisine}`;
+        });
+
         document.getElementById('menuButton').addEventListener('click', () => {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('show');
@@ -158,26 +214,6 @@
             if (window.innerWidth > 768) {
                 mobileMenu.classList.remove('show');
             }
-        });
-
-        document.getElementById('useLocation').addEventListener('click', async (e) => {
-            e.preventDefault();
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    const cuisine = document.getElementById('cuisine').value;
-                    window.location.href = `/search?latitude=${latitude}&longitude=${longitude}&cuisine=${cuisine}`;
-                });
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        });
-
-        document.getElementById('searchForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const cuisine = document.getElementById('cuisine').value;
-            const location = document.getElementById('location').value;
-            window.location.href = `/search?location=${location}&cuisine=${cuisine}`;
         });
     </script>
 </body>
