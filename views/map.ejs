@@ -179,7 +179,6 @@
                 latitude: parseFloat("<%= userLocation.latitude %>"),
                 longitude: parseFloat("<%= userLocation.longitude %>")
             };
-            console.log(userLocation);
 
             const businessesString = decodeHTMLEntities("<%= businessesString %>");
             let businesses = [];
@@ -191,22 +190,6 @@
                     console.error('Error parsing businesses JSON', e);
                 }
             }
-
-            //console.log(businesses);
-
-            // if (!isFinite(userLocation.latitude) || !isFinite(userLocation.longitude)) {
-            //     console.error('Invalid user location coordinates');
-            //     userLocation.latitude = 0;
-            //     userLocation.longitude = 0;
-            // }
-
-            // const { Map } = await google.maps.importLibrary("maps");
-
-            // const map = new Map(document.getElementById('map'), {
-            //     center: { lat: userLocation.latitude, lng: userLocation.longitude },
-            //     zoom: 14,
-            //     mapId: "<%= mapId %>"
-            // });
 
             let mapCenter = userLocation;
             if (!isFinite(userLocation.latitude) || !isFinite(userLocation.longitude)) {
@@ -232,7 +215,6 @@
 
             businesses.forEach(business => {
               if (isFinite(business.coordinates.latitude) && isFinite(business.coordinates.longitude)) {
-                console.log('Adding marker for business:', business.name, business.coordinates);
                     // new AdvancedMarkerElement({
                     //     position: { lat: business.coordinates.latitude, lng: business.coordinates.longitude },
                     //     map: map,
@@ -282,7 +264,6 @@
         (function() {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&v=beta&callback=initMap`;
-            //script.src = `https://maps.googleapis.com/maps/api/js?key=${"<%= googleMapsApiKey %>"}&v=beta&callback=initMap`;
             script.async = true;
             document.head.appendChild(script);
         })();
